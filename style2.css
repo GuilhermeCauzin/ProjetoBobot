@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+body{
+    background-image: url(imgs/fundo.png);
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    overflow: hidden;    
+    user-select: none;
+}
+
+.container{
+    background-color: #9494f4;
+    box-shadow: 5px 5px 10px 1px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    width: 55%;
+    height: 450px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    overflow: hidden;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    top: 70%;
+    left: 50%;
+}
+.ola{
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100%;
+    scrollbar-color: #22078b white;
+}
+.section{
+    font-family: Roboto;
+    font-size: 36px;
+    font-weight: 500;
+    margin:50px 0 0 0;
+    color:white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.icon{
+    width: 100px;
+    margin:0 50px
+}
+
+#titulo{
+    position: absolute;
+    width: 900px;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%,-50%);
+}

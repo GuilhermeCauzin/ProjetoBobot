@@ -1,0 +1,37 @@
+body{
+    background-image: url(imgs/fundo.png);
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    overflow: hidden;    
+    user-select: none;
+}
+.titulo{
+    left: 19%; 
+    top:21%; 
+    transform: translate(-50%,-50%); 
+    position: absolute;
+}
+
+img{
+    user-select: none;
+}
+
+.imgIniciar{
+    position: absolute; 
+    left: 10%; 
+    top: 50%;
+    width:  16%; 
+    height: auto;
+}
+
+.imgIniciar:active{
+    transform: translateY(1%);
+}
+
+.Bob{
+    left: 68%; 
+    top:60%; 
+    transform: translate(-50%,-50%); 
+    position: absolute;
+    width: 17%;
+}
