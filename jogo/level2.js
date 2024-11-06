@@ -11,15 +11,27 @@ export class Level2{
         this.descricao = "Aprenda a Segurar, Soltar e Colocar pastas!";
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
-        this.game = new Game(canvas.width, canvas.height, new Grid(this.canvas.width, this.canvas.height,12,12));
-        this.concluido = false;
         
+        //WIDTH PROPORTIONAL
+        var wP =Math.floor(this.canvas.width/100);
+        var wH =Math.floor(this.canvas.height/80);
+
+        this.game = new Game(canvas.width, canvas.height, new Grid(this.canvas.width, this.canvas.height,wP,wH));
+        this.concluido = false;
+
+        this.marginX = 3;
+        this.marginY = 3;
+
+        this.objW = (this.game.grid.width/this.game.grid.columnNumbers)-(this.marginX*2);
+        this.objH = (this.game.grid.height/this.game.grid.rowNumbers)-(this.marginY*2);
+
         //variaveis das etapas
         this.check1 = 0;
         this.check2 = 0;
         this.check3 = 0;
         this.check4 = 0;
         this.check5 = 0;
+
     }
     start(){
         this.game.Player = new Player(this.game,10,700,1.5);
@@ -28,9 +40,9 @@ export class Level2{
         bar.innerHTML = `
         <p style="font: 700 25px black;font-family:Roboto">Objetivos</p>\n
         <ol>
-            <li style="margin:20px 0; align-items:center; flex-wrap:nowrap; flex-direction:row;"><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Ande até o arquivo e segure-o.(Dica:Clique com o botão esquerdo do mouse) <img draggable="false" id="item1" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></li></li>
+            <li style="margin:20px 0; align-items:center; flex-wrap:nowrap; flex-direction:row;"><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Ande até o arquivo e segure-o.(Dica:Clique e SEGURE o botão esquerdo do mouse) <img draggable="false" id="item1" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></li></li>
             <li style="margin:20px 0">Leve o arquivo até a posição demarcada. <img draggable="false" id="item2" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></li>
-            <li style="margin:20px 0; "><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Coloque uma pasta dentro da outra.(Dica: Segurando uma pasta próximo a outra, clique com o botão esquerdo do mouse)<img draggable="false" id="item3" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></div></li>
+            <li style="margin:20px 0; "><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Coloque uma pasta dentro da outra.(Dica: Solte o botão do mouse quando estiver EM CIMA do local)<img draggable="false" id="item3" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></div></li>
             <li style="margin:20px 0"><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Abra a pasta.(Dica: Quando estiver próximo de uma pasta, clique com o botão direito do mouse) <img draggable="false" id="item4" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></div></li>
             <li style="margin:20px 0"><div style="display:flex; flex-direction:row;align-items:center;flex-wrap:nowrap">Feche a pasta.(Dica: Para fechar aproxime-se ao símbolo de \"X\" e clique nele) <img draggable="false" id="item5" src="unchecked.png" style="width:20px;vertical-align:middle;float:right;margin:0 0 0 10px" /></div></li>
         </ol>`
@@ -41,7 +53,7 @@ export class Level2{
         this.game.update();
         if(this.check1 == 0){
             //iniciar próximo passo
-            var obj = new Object(this.game,(this.canvas.width/2), 800,document.getElementById("folder"),null,null,true,[]);
+            var obj = new Object(this.game,(this.canvas.width/2), 800,this.objW,this.objH,document.getElementById("folder"),null,null,true,[]);
             obj.nome = "Pasta 1"
             obj.placeAtGrid(this.game);
             this.check1 = 1;
@@ -70,7 +82,7 @@ export class Level2{
             this.check3 = 1;
             //Reflexao: O que eu preciso pra começar está etapa? => Implementar o que eu preciso!!
             //iniciar próximo passo
-            var obj = new Object(this.game,(this.canvas.width/2), 800,document.getElementById("folder"),null,null,true,[]);
+            var obj = new Object(this.game,(this.canvas.width/2), 800,this.objW,this.objH,document.getElementById("folder"),null,null,true,[]);
             obj.nome = "Pasta 2";
             obj.placeAtGrid(this.game);
         }

@@ -45,56 +45,33 @@ export class Game{
         function mouseDown(game) { 
             mouseTimer = window.setTimeout(() => {
                 holding = true;
-                var obj = game.holding;
-                var [x,y] = game.grid.autoPlace(obj,game.Player.centerX(),game.Player.centerY());
-                let [c,r] = game.grid.getColumnAndRow(game.Player.centerX(),game.Player.centerY());
-                
-                if(x != -1 && y != -1){
-                    obj.x = x;
-                    obj.y = y;
-                    // this.game.objects.push(obj);
-                    obj.holding = false;
-                    game.holding = null;
-                }
-                else if(game.grid.spaces[c,r] != null){
-                    let obj1 = game.grid.spaces[c][r];
-                    if(obj1.items != null && obj1.items.includes(obj) == false){
-                        if(obj1.isOpen == true){
-                            var pasta = game.pastaAberta.filter((pasta) => pasta.obj.index == obj1.index && pasta.obj.isOpen == true);
-                            pasta[0].insertItem(obj);
-                        }
-                        else{
-                            obj1.items.push(obj);
-                        }
-                        game.holding = null;
-                        obj.holding = false;
-                        game.objects.splice(game.objects.indexOf(obj),1);
-                    }
-                }
-
-            },600); //set timeout to fire when the user presses mouse button down
+                game.segurar();
+            },200); //set timeout to fire when the user presses mouse button down
         }
 
-        const mouseUp = () =>{
+        const mouseUp = (e) =>{
             if (mouseTimer){ 
+                //Não começou segurar, ativar apenas função de click
                 if(holding == false){
-                    alert("N SEGUROU");
                     window.clearTimeout(mouseTimer);
+                    this.interagirPasta();
+
                 }
+                //Começou segurar, ativar função de soltar
                 else if (holding == true){
-                    alert("SEGUROU");
+                    this.soltar();
                 }
-                window.removeEventListener("mouseup", mouseUp);
-            };  //cancel timer when mouse button is released
+                //REMOVER O EVENTO PARA NÃO SE REPETIR
+                window.removeEventListener("mouseup", mouseUp, false);
+            }; 
         }
-
+        //COMEÇAR A INTERAÇÃO
         mouseDown(this);
-        window.addEventListener("mouseup", mouseUp() );
-
-        return;
-
-
-        //FECHAR PASTA OU SEGURAR EM OBJETO
+        //VERIFICAR QUANDO TIROU O MOUSE
+        window.addEventListener("mouseup", mouseUp, false);
+    }
+    segurar(){
+        //SEGURAR EM OBJETO
         if(this.holding == null){
             var nearObjects = this.objects.filter(obj => this.checkNearObject(obj) && obj.toGrab);
 
@@ -105,16 +82,16 @@ export class Game{
                     return distance < (this.nearXFunc(minObj) + this.nearYFunc(minObj))?obj:minObj;
                 },nearObjects.splice(0,1)[0]);
 
-                if(nearest.toGrab == true){
+                if(nearest.toGrab == true && nearest.isOpen == false){
                     this.grid.autoRemove(nearest);
                     nearest.holding = true;
                     this.holding = nearest;
                 }
             }
-            //this.holding.push(nearest);
         }
-        //SOLTAR OBJETO
-        else{
+    }
+    soltar(){
+        if(this.holding != null){
             var obj = this.holding;
             var [x,y] = this.grid.autoPlace(obj,this.Player.centerX(),this.Player.centerY());
             let [c,r] = this.grid.getColumnAndRow(this.Player.centerX(),this.Player.centerY());
@@ -143,7 +120,8 @@ export class Game{
             }
         }
     }
-    rightClick(){
+    interagirPasta(){
+        //Abrir/fechar pasta
         if(this.holding == null){
             var nearObjects = this.objects.filter(obj => this.checkNearObject(obj) && obj.toGrab);
             let pastas  = [...this.pastaAberta]

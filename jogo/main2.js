@@ -1,4 +1,3 @@
-import { Level1 } from "./level1.js";
 import { Level2 } from "./level2.js";
 
 // Configuration
