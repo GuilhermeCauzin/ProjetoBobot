@@ -16,7 +16,7 @@ function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     if(faseAtual.concluido == true){
         localStorage.setItem("fase1",'true');
-        window.location.href ="/BoBot/fases.html";
+        window.location.href ="/fases.html";
     }
     faseAtual.update();
     faseAtual.draw();

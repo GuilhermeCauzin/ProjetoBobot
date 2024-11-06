@@ -30,15 +30,18 @@ body{
     max-height: 100%;
     scrollbar-color: #22078b white;
 }
+.section:hover{
+    background-color: RGBA(0,0,0,0.01) ;
+}
 .section{
     font-family: Roboto;
     font-size: 36px;
     font-weight: 500;
-    margin:50px 0 0 0;
+    padding: 10px 0px;
     color:white;
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    height: 100px;
 }
 
 .icon{
@@ -52,4 +55,32 @@ body{
     left: 50%;
     top: 30%;
     transform: translate(-50%,-50%);
+}
+
+.bloqueado{
+    display: none;
+    position: absolute;
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 8px;
+    margin: auto;
+    background-color: rgb(76, 64, 92);
+    border-radius: 3px;
+    margin: 0 0;
+}
+
+#reiniciar{
+    position: absolute;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background-color: #5555e2;
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 500;
+    color: #a2a2f5;
+    left: 98%;
+    top: 2%;
+    transform: translate(-100%,0);
+
 }

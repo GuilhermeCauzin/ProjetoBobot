@@ -17,47 +17,95 @@ export class Game{
         
         this.globalIndex = 1;
 
-        window.addEventListener('mousedown', (e) => {if(e.button == 0){this.click()} else if(e.button == 2){this.rightClick()}})
-        window.addEventListener('contextmenu', (e) => {e.preventDefault();})
+        window.addEventListener('mousedown', (e) => {if(e.button == 0){this.click()}});
     }
     click(){
+        //Tirar evento de click direito
+        //Rodar intervalo
+        //Mouse soltou antes do intervalo apaga intervalo e continue com click 2
+        //Intervalo terminou antes, segura objeto 
+        //criar evento de soltar mouse 1 para mesma função de soltar
+
+        // var time = setTimeout(()=>{},1000);
+        // window.addEventListener('mouseup', (e)=>{
+        //     if(time){
+        //         console.log("Tempo já acabou")
+        //         clearTimeout(time);
+        //     }
+        //     else {
+        //         console.log("TEMPO CABOU NADA")
+        //         clearTimeout(time);
+        //     }
+        // });
+        // return;
+
+
+        var mouseTimer;
+        var holding = false;
+        function mouseDown(game) { 
+            mouseTimer = window.setTimeout(() => {
+                holding = true;
+                var obj = game.holding;
+                var [x,y] = game.grid.autoPlace(obj,game.Player.centerX(),game.Player.centerY());
+                let [c,r] = game.grid.getColumnAndRow(game.Player.centerX(),game.Player.centerY());
+                
+                if(x != -1 && y != -1){
+                    obj.x = x;
+                    obj.y = y;
+                    // this.game.objects.push(obj);
+                    obj.holding = false;
+                    game.holding = null;
+                }
+                else if(game.grid.spaces[c,r] != null){
+                    let obj1 = game.grid.spaces[c][r];
+                    if(obj1.items != null && obj1.items.includes(obj) == false){
+                        if(obj1.isOpen == true){
+                            var pasta = game.pastaAberta.filter((pasta) => pasta.obj.index == obj1.index && pasta.obj.isOpen == true);
+                            pasta[0].insertItem(obj);
+                        }
+                        else{
+                            obj1.items.push(obj);
+                        }
+                        game.holding = null;
+                        obj.holding = false;
+                        game.objects.splice(game.objects.indexOf(obj),1);
+                    }
+                }
+
+            },600); //set timeout to fire when the user presses mouse button down
+        }
+
+        const mouseUp = () =>{
+            if (mouseTimer){ 
+                if(holding == false){
+                    alert("N SEGUROU");
+                    window.clearTimeout(mouseTimer);
+                }
+                else if (holding == true){
+                    alert("SEGUROU");
+                }
+                window.removeEventListener("mouseup", mouseUp);
+            };  //cancel timer when mouse button is released
+        }
+
+        mouseDown(this);
+        window.addEventListener("mouseup", mouseUp() );
+
+        return;
+
+
         //FECHAR PASTA OU SEGURAR EM OBJETO
         if(this.holding == null){
             var nearObjects = this.objects.filter(obj => this.checkNearObject(obj) && obj.toGrab);
-            let pastas  = [...this.pastaAberta]
-            let nearFolderClose = this.pastaAberta.length > 0 ? 
-            pastas.reduce((min,actual) => {
-                var distance = actual.getDistance(this);
-                return distance < min.getDistance(this) ? actual : min;
-            },pastas.splice(0,1)[0]) : null;
 
-
-            //var nearestArr = nearObjects.sort((a,b) => {(this.nearXFunc(a) + this.nearYFunc(a))-(this.nearXFunc(b) + this.nearYFunc(b))});
-            if(nearObjects.length > 0 || nearFolderClose != null){
+            if(nearObjects.length > 0 ){
                 //funcao pra organizar quem está mais perto 
                 var nearest = nearObjects.reduce((minObj,obj) => { 
                     var distance = this.nearXFunc(obj) + this.nearYFunc(obj);
                     return distance < (this.nearXFunc(minObj) + this.nearYFunc(minObj))?obj:minObj;
                 },nearObjects.splice(0,1)[0]);
 
-                if(this.pastaAberta.length > 0){
-                    let pastas  = [...this.pastaAberta]
-                    let nearFolderClose = this.pastaAberta.length > 0 ? 
-                    pastas.reduce((min,actual) => {
-                        var distance = actual.getDistance(this);
-                        return distance < min.getDistance(this) ? actual : min;
-                    },pastas.splice(0,1)[0]) : null;
-                    let [folderX,folderY] = nearFolderClose.getDistance(this);
-                    if( nearest != null && folderX+folderY > this.nearXFunc(nearest.x)+this.nearYFunc(nearest.y) && nearest.isOpen == false && nearest.toGrab == true){
-                        this.grid.autoRemove(nearest);
-                        nearest.holding = true;
-                        this.holding = nearest;
-                    }
-                    else if( nearFolderClose != null && (nearest == null || folderX+folderY < this.nearXFunc(nearest.x)+this.nearYFunc(nearest.y)) && nearFolderClose.obj.isOpen == true ){
-                        nearFolderClose.close(this);
-                    } 
-                }
-                else if(nearest.toGrab == true){
+                if(nearest.toGrab == true){
                     this.grid.autoRemove(nearest);
                     nearest.holding = true;
                     this.holding = nearest;
@@ -98,20 +146,40 @@ export class Game{
     rightClick(){
         if(this.holding == null){
             var nearObjects = this.objects.filter(obj => this.checkNearObject(obj) && obj.toGrab);
-            if(nearObjects.length > 0){
+            let pastas  = [...this.pastaAberta]
+            let nearFolderClose = 
+                this.pastaAberta.length > 0 ? 
+                pastas.reduce((min,actual) => {
+                    var distance = actual.getDistance(this);
+                    return distance < min.getDistance(this) ? actual : min;
+                },pastas.splice(0,1)[0]) 
+            : null;
+            if(nearObjects.length > 0 || nearFolderClose != null){
                 //funcao pra organizar quem está mais perto 
-                var nearest = nearObjects.reduce((minObj,obj) => {
+                var nearest = nearObjects.reduce((minObj,obj) => { 
                     var distance = this.nearXFunc(obj) + this.nearYFunc(obj);
                     return distance < (this.nearXFunc(minObj) + this.nearYFunc(minObj))?obj:minObj;
                 },nearObjects.splice(0,1)[0]);
-                if(nearest.isOpen == false){
+
+                if(this.pastaAberta.length > 0){
+                    let [folderX,folderY] = nearFolderClose.getDistance(this);
+                    if( nearest != null && folderX+folderY > this.nearXFunc(nearest.x)+this.nearYFunc(nearest.y) && nearest.isOpen == false){
+                        nearest.isOpen = true;
+                        let LastFolder = this.pastaAberta[this.pastaAberta.length-1];
+                        let pasta = new Pasta(nearest, LastFolder != null ? LastFolder.x+50 : (this.width/2)-600, (this.height/2)-350,1200,700);
+                        this.pastaAberta.push(pasta);
+                    }
+                    else if( nearFolderClose != null && (nearest == null || folderX+folderY < this.nearXFunc(nearest.x)+this.nearYFunc(nearest.y)) && nearFolderClose.obj.isOpen == true ){
+                        nearFolderClose.close(this);
+                    } 
+                }
+                else if(nearest.isOpen == false){
                     nearest.isOpen = true;
                     let LastFolder = this.pastaAberta[this.pastaAberta.length-1];
                     let pasta = new Pasta(nearest, LastFolder != null ? LastFolder.x+50 : (this.width/2)-600, (this.height/2)-350,1200,700);
                     this.pastaAberta.push(pasta);
                 }
             }
-            //this.holding.push(nearest);
         }
     }
     update(){

@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style2.css">
-    <script src="script2.js" defer></script>
+    <script src="fasesScript.js" defer></script>
     <title>Tutorial</title>
 </head>
 <body>
     <img src="imgs/TextoTutorial.png" draggable="false" id="titulo" />
     <div class="container">
         <div class="ola">
-            <section id="fase1" class="section" onclick="ComecarFase(1)"><img src="imgs/andar.png" class="icon"/><span class="text">Movimentar-se</span></section>
-            <section id="fase2" class="section" onclick="ComecarFase(2)"><img src="imgs/arquivo.png" class="icon"/><span class="text">Usar pastas</span></section>
+            <section id="fase1" class="section" onclick="ComecarFase(1)"><div class="bloqueado"></div><img src="imgs/chrome.png" class="icon"/><span class="text">Como usar o Chrome</span></section>
+            <section id="fase2" class="section" onclick="ComecarFase(2)"><div class="bloqueado"></div><img src="imgs/arquivo.png" class="icon"/><span class="text">Como abrir os arquivos</span></section>
+            <section id="fase3" class="section" onclick="ComecarFase(3)"><div class="bloqueado"></div><img src="imgs/winrar.png" class="icon"/><span class="text">Como extrair um arquivo</span></section>
         </div>
     </div>
+    <div id="reiniciar">Reiniciar</div>
 
 </body>
 </html>

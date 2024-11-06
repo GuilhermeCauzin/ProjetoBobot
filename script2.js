@@ -1,6 +1,6 @@
 
-sessionStorage.setItem("fase1","false");
-sessionStorage.setItem("fase2","false");
+localStorage.setItem("fase1","false");
+localStorage.setItem("fase2","false");
 let fase1 = localStorage.getItem("fase1");
 let fase2 = localStorage.getItem("fase2");
 if(fase1 == 'true'){
